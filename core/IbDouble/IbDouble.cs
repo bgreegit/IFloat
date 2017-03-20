@@ -118,12 +118,12 @@ namespace IbDouble
             }
 
             // reduce too big significand and remove following zeros
-            while (sig >= s_maxSig || sig % 10 == 0)
+            while (sig >= s_maxSig || sig != 0 && sig % 10 == 0)
             {
                 sig /= 10;
-                exp -= 1;
+                exp += 1;
             }
-            return new IbDouble(isNegative ? -sig : sig, exp);
+            return new IbDouble(isNegative ? -sig : sig, exp, false);
         }
 
         private void NormalizeSelf()
@@ -136,7 +136,7 @@ namespace IbDouble
             }
 
             // reduce too big significand and remove following zeros
-            while (_sig >= s_maxSig || _sig % 10 == 0)
+            while (_sig >= s_maxSig || _sig != 0 && _sig % 10 == 0)
             {
                 _sig /= 10;
                 _exp += 1;
