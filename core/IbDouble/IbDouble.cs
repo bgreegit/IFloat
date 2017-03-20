@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace IbDouble
+namespace IbDecimal
 {
     public struct IbDouble
     {

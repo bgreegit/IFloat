@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IbFloat
+namespace IbDecimal
 {
     public struct IbFloat
     {
