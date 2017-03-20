@@ -2,7 +2,7 @@
 using System;
 using System.Numerics;
 
-namespace IbDouble.Tests
+namespace IbDecimal.Tests
 {
     public class IbDoubleTests : AssertionHelper
     {

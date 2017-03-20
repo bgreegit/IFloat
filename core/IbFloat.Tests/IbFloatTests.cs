@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 
-namespace IbFloat.Tests
+namespace IbDecimal.Tests
 {
     public class IbFloatTests
     {

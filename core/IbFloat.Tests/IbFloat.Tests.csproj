@@ -43,7 +43,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="IbDoubleTests.cs" />
+    <Compile Include="IbFloatTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
