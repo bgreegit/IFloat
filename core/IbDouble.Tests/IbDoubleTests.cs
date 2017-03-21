@@ -200,7 +200,7 @@ namespace IbReal.Tests
 		}
 
 		[Test]
-		public void TestConvert()
+		public void TestConvert_Integer()
 		{
 			IbDouble d0;
 
@@ -311,6 +311,22 @@ namespace IbReal.Tests
 				d0 = new IbDouble(-922337203685477581L, 1);
 				var v = (uint)d0;
 			});
+		}
+
+		[Test]
+		public void TestConvert_FloatDouble()
+		{
+			float vf;
+			vf = (float)new IbDouble(123456, 3);
+			Assert.True(vf == 123456000f);
+			vf = (float)new IbDouble(123456, -3);
+			Assert.True(vf == 123.456f);
+
+			double vd;
+			vd = (double)new IbDouble(123456, 3);
+			Assert.True(Math.Abs(vd - 123456000) / 123456000 < 0.000001);
+			vd = (double)new IbDouble(123456, -3);
+			Assert.True(Math.Abs(vd - 123.456) / 123.456 < 0.000001);
 		}
 	}
 }

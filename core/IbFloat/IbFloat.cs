@@ -588,5 +588,33 @@ namespace IbReal
 				return v;
 			}
 		}
+
+		public static explicit operator float(IbFloat value)
+		{
+			return (float)((double)value);
+		}
+
+		public static explicit operator double(IbFloat value)
+		{
+			var v = (double)value._sig;
+
+			// multiply exp with checked statement
+			if (value._exp >= 0)
+			{
+				for (int i = 0; i < value._exp; ++i)
+				{
+					checked { v *= 10; }
+				}
+				return v;
+			}
+			else
+			{
+				for (int i = 0; i < -value._exp; ++i)
+				{
+					checked { v *= 0.1; }
+				}
+				return v;
+			}
+		}
 	}
 }
