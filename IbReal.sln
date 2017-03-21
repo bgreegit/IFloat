@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IbFloat", "core\IbFloat\IbF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IbFloat.Tests", "core\IbFloat.Tests\IbFloat.Tests.csproj", "{92947AA5-3CA2-4618-AED2-4967C017FAEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IbDecimal.Perf.Tests", "core\IbDecimal.Perf.Tests\IbDecimal.Perf.Tests.csproj", "{7EB2B94B-A2E2-440A-B6B4-E4B6C716F962}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IbReal.Perf.Tests", "core\IbDecimal.Perf.Tests\IbReal.Perf.Tests.csproj", "{7EB2B94B-A2E2-440A-B6B4-E4B6C716F962}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IbFloat.Net35", "core\IbFloat.Net35\IbFloat.Net35.csproj", "{E4DF43BD-FE53-47B7-892C-EB230B15C4C0}"
 EndProject

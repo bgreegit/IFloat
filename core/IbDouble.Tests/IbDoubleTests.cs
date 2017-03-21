@@ -2,7 +2,7 @@
 using System;
 using System.Numerics;
 
-namespace IbDecimal.Tests
+namespace IbReal.Tests
 {
     public class IbDoubleTests : AssertionHelper
     {
@@ -198,5 +198,119 @@ namespace IbDecimal.Tests
 				var ds = d0 / d1;
 			});
 		}
-    }
+
+		[Test]
+		public void TestConvert()
+		{
+			IbDouble d0;
+
+			byte vb;
+			vb = (byte)new IbDouble(byte.MaxValue, 0);
+			Assert.True(vb == byte.MaxValue);
+			vb = (byte)new IbDouble(byte.MinValue, 0);
+			Assert.True(vb == byte.MinValue);
+
+			int vi;
+			vi = (int)new IbDouble(int.MaxValue, 0);
+			Assert.True(vi == int.MaxValue);
+			vi = (int)new IbDouble(int.MinValue, 0);
+			Assert.True(vi == int.MinValue);
+
+			uint vui;
+			vui = (uint)new IbDouble(uint.MaxValue, 0);
+			Assert.True(vui == uint.MaxValue);
+			vui = (uint)new IbDouble(uint.MinValue, 0);
+			Assert.True(vui == uint.MinValue);
+
+			// IbDouble's sig support [10^18 - 1, -10^18 + 1]
+			long vl;
+			vl = (long)new IbDouble(1000000000000000000L - 1, 0);
+			Assert.True(vl == 1000000000000000000L - 1);
+			vl = (long)new IbDouble(-1000000000000000000L + 1, 0);
+			Assert.True(vl == -1000000000000000000L + 1);
+
+			// IbDouble's sig support [10^18 - 1, -10^18 + 1]
+			ulong vul;
+			vul = (ulong)new IbDouble(1000000000000000000UL - 1, 0);
+			Assert.True(vul == 1000000000000000000UL - 1);
+			vul = (ulong)new IbDouble(ulong.MinValue, 0);
+			Assert.True(vul == ulong.MinValue);
+
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				d0 = new IbDouble(byte.MaxValue + 1, 0);
+				var v = (byte)d0;
+			});
+
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				d0 = new IbDouble(byte.MinValue - 1, 0);
+				var v = (byte)d0;
+			});
+
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				d0 = new IbDouble(char.MaxValue + 1, 0);
+				var v = (char)d0;
+			});
+
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				d0 = new IbDouble(char.MinValue - 1, 0);
+				var v = (char)d0;
+			});
+
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				d0 = new IbDouble((long)int.MaxValue + 1, 0);
+				var v = (int)d0;
+			});
+
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				d0 = new IbDouble((long)int.MinValue - 1, 0);
+				var v = (int)d0;
+			});
+
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				d0 = new IbDouble((long)uint.MaxValue + 1, 0);
+				var v = (uint)d0;
+			});
+
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				d0 = new IbDouble((long)uint.MinValue - 1, 0);
+				var v = (uint)d0;
+			});
+
+			// long.Max = 9223372036854775807
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				d0 = new IbDouble(922337203685477581L, 1);
+				var v = (long)d0;
+			});
+
+			// long.min = -9223372036854775808
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				d0 = new IbDouble(-922337203685477581L, 1);
+				var v = (uint)d0;
+			});
+
+			// long.Max = 9223372036854775807
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				d0 = new IbDouble(922337203685477581L, 1);
+				var v = (long)d0;
+			});
+
+			// long.min = -9223372036854775808
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				d0 = new IbDouble(-922337203685477581L, 1);
+				var v = (uint)d0;
+			});
+		}
+	}
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace IbDecimal
+namespace IbReal
 {
     public struct IbDouble
     {
@@ -494,5 +494,95 @@ namespace IbDecimal
         public int CompareTo(ulong other) { return Compare(this, other); }
         public bool Equals(long other) { return this == other; }
         public bool Equals(ulong other) { return this == other; }
-    }
+
+		public static explicit operator byte(IbDouble value)
+		{
+			return checked((byte)((long)value));
+		}
+
+		public static explicit operator sbyte(IbDouble value)
+		{
+			return checked((sbyte)((long)value));
+		}
+
+		public static explicit operator short(IbDouble value)
+		{
+			return checked((short)((long)value));
+		}
+
+		public static explicit operator ushort(IbDouble value)
+		{
+			return checked((ushort)((long)value));
+		}
+
+		public static explicit operator int(IbDouble value)
+		{
+			return checked((int)((long)value));
+		}
+
+		public static explicit operator uint(IbDouble value)
+		{
+			return checked((uint)((long)value));
+		}
+
+		public static explicit operator long(IbDouble value)
+		{
+			// value._sig is nomalized. So do not check overflow
+			long v = (long)value._sig;
+
+			if (value._exp >= 19)
+			{
+				throw new OverflowException("Value was either too large or too small for an Int64.");
+			}
+			else if (value._exp >= 0)
+			{
+				// multiply exp with checked statement
+				for (int i = 0; i < value._exp; ++i)
+				{
+					checked { v *= 10; }
+				}
+				return v;
+			}
+			else
+			{
+				for (int i = 0; i < -value._exp && v != 0; ++i)
+				{
+					v /= 10;
+				}
+				return v;
+			}
+		}
+
+		public static explicit operator ulong(IbDouble value)
+		{
+			if (value._sig < 0)
+			{
+				throw new OverflowException("Value was either too small for an UInt64.");
+			}
+
+			ulong v = (ulong)value._sig;
+
+			if (value._exp >= 19)
+			{
+				throw new OverflowException("Value was either too large or too small for an UInt64.");
+			}
+			else if (value._exp >= 0)
+			{
+				// multiply exp with checked statement
+				for (int i = 0; i < value._exp; ++i)
+				{
+					checked { v *= 10; }
+				}
+				return v;
+			}
+			else
+			{
+				for (int i = 0; i < -value._exp && v > 0; ++i)
+				{
+					v /= 10;
+				}
+				return v;
+			}
+		}
+	}
 }

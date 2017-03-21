@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace IbDecimal.Perf.Tests
+namespace IbReal.Perf.Tests
 {
     class Program
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IbDecimal
+namespace IbReal
 {
     public struct IbFloat
     {
@@ -449,5 +449,144 @@ namespace IbDecimal
         public static int Compare(IbFloat left, IbFloat right) { return left < right ? -1 : (left > right ? 1 : 0); }
         public int CompareTo(long other) { return Compare(this, other); }
         public bool Equals(long other) { return this == other; }
-    }
+
+		public static explicit operator byte(IbFloat value)
+		{
+			return checked((byte)((int)value));
+		}
+
+		public static explicit operator sbyte(IbFloat value)
+		{
+			return checked((sbyte)((int)value));
+		}
+
+		public static explicit operator short(IbFloat value)
+		{
+			return checked((short)((int)value));
+		}
+
+		public static explicit operator ushort(IbFloat value)
+		{
+			return checked((ushort)((int)value));
+		}
+
+		public static explicit operator int(IbFloat value)
+		{
+			// value._sig is nomalized. So do not check overflow
+			int v = (int)value._sig;
+
+			if (value._exp >= 10)
+			{
+				throw new OverflowException("Value was either too large or too small for an Int32.");
+			}
+			else if (value._exp >= 0)
+			{
+				// multiply exp with checked statement
+				for (int i = 0; i < value._exp; ++i)
+				{
+					checked { v *= 10; }
+				}
+				return v;
+			}
+			else
+			{
+				for (int i = 0; i < -value._exp && v != 0; ++i)
+				{
+					v /= 10;
+				}
+				return v;
+			}
+		}
+
+		public static explicit operator uint(IbFloat value)
+		{
+			if (value._sig < 0)
+			{
+				throw new OverflowException("Value was either too small for an UInt32.");
+			}
+
+			uint v = (uint)value._sig;
+
+			if (value._exp >= 10)
+			{
+				throw new OverflowException("Value was either too large or too small for an UInt32.");
+			}
+			else if (value._exp >= 0)
+			{
+				// multiply exp with checked statement
+				for (int i = 0; i < value._exp; ++i)
+				{
+					checked { v *= 10; }
+				}
+				return v;
+			}
+			else
+			{
+				for (int i = 0; i < -value._exp && v != 0; ++i)
+				{
+					v /= 10;
+				}
+				return v;
+			}
+		}
+
+		public static explicit operator long(IbFloat value)
+		{
+			long v = value._sig;
+
+			if (value._exp >= 19)
+			{
+				throw new OverflowException("Value was either too large or too small for an Int64.");
+			}
+			else if (value._exp >= 0)
+			{
+				// multiply exp with checked statement
+				for (int i = 0; i < value._exp; ++i)
+				{
+					checked { v *= 10; }
+				}
+				return v;
+			}
+			else
+			{
+				for (int i = 0; i < -value._exp && v != 0; ++i)
+				{
+					v /= 10;
+				}
+				return v;
+			}
+		}
+
+		public static explicit operator ulong(IbFloat value)
+		{
+			if (value._sig < 0)
+			{
+				throw new OverflowException("Value was either too small for an UInt64.");
+			}
+
+			ulong v = (ulong)value._sig;
+
+			if (value._exp >= 19)
+			{
+				throw new OverflowException("Value was either too large or too small for an UInt64.");
+			}
+			else if (value._exp >= 0)
+			{
+				// multiply exp with checked statement
+				for (int i = 0; i < value._exp; ++i)
+				{
+					checked { v *= 10; }
+				}
+				return v;
+			}
+			else
+			{
+				for (int i = 0; i < -value._exp && v != 0; ++i)
+				{
+					v /= 10;
+				}
+				return v;
+			}
+		}
+	}
 }
