@@ -173,5 +173,25 @@ namespace IbDecimal.Tests
                 var dd = IbFloat.Parse("AAA.456");
             });
         }
-    }
+
+		[Test]
+		public void TestOverflow()
+		{
+			IbFloat d0, d1;
+
+			d0 = new IbFloat(123456, short.MaxValue);
+			d1 = new IbFloat(654321, 10);
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				var ds = d0 * d1;
+			});
+
+			d0 = new IbFloat(123456, short.MinValue);
+			d1 = new IbFloat(654321, 10);
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				var ds = d0 / d1;
+			});
+		}
+	}
 }

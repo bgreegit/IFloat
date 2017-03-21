@@ -5,7 +5,7 @@ namespace IbDecimal
     public struct IbFloat
     {
         private long _sig;
-        private int _exp;
+        private short _exp;
 
         private const int maxPrecision = 9;
 
@@ -26,14 +26,14 @@ namespace IbDecimal
             1000000000,          // 10 ^ 9
         };
 
-        public IbFloat(long sig, int exp)
+        public IbFloat(long sig, short exp)
         {
             _sig = sig;
             _exp = exp;
             NormalizeSelf();
         }
 
-        private IbFloat(long sig, int exp, bool needNomalize = true)
+        private IbFloat(long sig, short exp, bool needNomalize = true)
         {
             _sig = sig;
             _exp = exp;
@@ -48,7 +48,7 @@ namespace IbDecimal
             NormalizeSelf();
         }
 
-        public IbFloat(int v, int exp)
+        public IbFloat(int v, short exp)
         {
             _sig = v;
             _exp = exp;
@@ -62,7 +62,7 @@ namespace IbDecimal
             NormalizeSelf();
         }
 
-        public IbFloat(uint v, int exp)
+        public IbFloat(uint v, short exp)
         {
             _sig = v;
             _exp = exp;
@@ -109,29 +109,29 @@ namespace IbDecimal
             while (_sig >= s_maxSig || _sig != 0 && _sig % 10 == 0)
             {
                 _sig /= 10;
-                _exp += 1;
+				checked { _exp += 1; };
             }
             if (isNegative)
                 _sig = -_sig;
         }
 
-        private IbFloat Denomalize(int exp)
+        private IbFloat Denomalize(short exp)
         {
             if (exp > 0)
                 throw new ArgumentException("Denomalize should be negative", nameof(exp));
             if (exp < -maxPrecision)
                 throw new ArgumentException("Denomalize exp overflow", nameof(exp));
-            return new IbFloat(_sig * s_exp2sig[-exp], _exp + exp, false);
+            return new IbFloat(_sig * s_exp2sig[-exp], checked((short)(_exp + exp)), false);
         }
 
-        private void DenomalizeSelf(int exp)
+        private void DenomalizeSelf(short exp)
         {
             if (exp > 0)
                 throw new ArgumentException("DenomalizeSelf should be negative", nameof(exp));
             if (exp < -maxPrecision)
                 throw new ArgumentException("DenomalizeSelf exp overflow", nameof(exp));
             _sig *= s_exp2sig[-exp];
-            _exp += exp;
+			checked { _exp += exp; }
         }
 
         public override bool Equals(object obj)
@@ -195,7 +195,7 @@ namespace IbDecimal
             {
                 var exp = -value.Length + dotIndex + 1;
                 value = value.Substring(0, dotIndex) + value.Substring(dotIndex + 1);
-                return (new IbFloat(long.Parse(value), exp)).Normalize();
+				return (new IbFloat(long.Parse(value), checked((short)exp))).Normalize();
             }
         }
 
@@ -212,7 +212,7 @@ namespace IbDecimal
                 }
                 else
                 {
-                    result = IbFloat.Zero;
+                    result = Zero;
                     return false;
                 }
             }
@@ -223,12 +223,12 @@ namespace IbDecimal
                 long sig;
                 if (long.TryParse(value, out sig))
                 {
-                    result = (new IbFloat(sig, exp)).Normalize();
+                    result = (new IbFloat(sig, checked((short)exp))).Normalize();
                     return true;
                 }
                 else
                 {
-                    result = IbFloat.Zero;
+                    result = Zero;
                     return false;
                 }
             }
@@ -259,13 +259,13 @@ namespace IbDecimal
             }
             else if (ed > 0)
             {
-                v1d = v1.Denomalize(-ed);
+                v1d = v1.Denomalize((short)-ed);
                 v2d = v2;
             }
             else if (ed < 0)
             {
                 v1d = v1;
-                v2d = v2.Denomalize(ed);
+                v2d = v2.Denomalize((short)ed);
             }
             else
             {
@@ -283,8 +283,8 @@ namespace IbDecimal
 
         public static IbFloat operator *(IbFloat v1, IbFloat v2)
         {
-            var sig = v1._sig * v2._sig;
-            var exp = v1._exp + v2._exp;
+			var sig = v1._sig * v2._sig;
+			var exp = checked((short)(v1._exp + v2._exp));
             return (new IbFloat(sig, exp)).Normalize();
         }
 
@@ -292,9 +292,9 @@ namespace IbDecimal
         {
             // first, denomalize temprary
             var v1d = v1.Denomalize(-maxPrecision);
-            // do integer division and normalize
-            var sig = v1d._sig / v2._sig;
-            var exp = v1d._exp - v2._exp;
+			// do integer division and normalize
+			var sig = v1d._sig / v2._sig;
+			var exp = checked((short)(v1d._exp - v2._exp));
             return (new IbFloat(sig, exp)).Normalize();
         }
 
@@ -318,12 +318,12 @@ namespace IbDecimal
             }
             else if (ed > 0)
             {
-                var ld = left.Denomalize(-ed);
+                var ld = left.Denomalize((short)-ed);
                 return ld._sig < right._sig;
             }
             else if (ed < 0)
             {
-                var rd = right.Denomalize(ed);
+                var rd = right.Denomalize((short)ed);
                 return left._sig < rd._sig;
             }
             else
@@ -347,12 +347,12 @@ namespace IbDecimal
             }
             else if (ed > 0)
             {
-                var ld = left.Denomalize(-ed);
+                var ld = left.Denomalize((short)-ed);
                 return ld._sig > right._sig;
             }
             else if (ed < 0)
             {
-                var rd = right.Denomalize(ed);
+                var rd = right.Denomalize((short)ed);
                 return left._sig > rd._sig;
             }
             else
@@ -376,12 +376,12 @@ namespace IbDecimal
             }
             else if (ed > 0)
             {
-                var ld = left.Denomalize(-ed);
+                var ld = left.Denomalize((short)-ed);
                 return ld._sig <= right._sig;
             }
             else if (ed < 0)
             {
-                var rd = right.Denomalize(ed);
+                var rd = right.Denomalize((short)ed);
                 return left._sig <= rd._sig;
             }
             else
@@ -406,12 +406,12 @@ namespace IbDecimal
             }
             else if (ed > 0)
             {
-                var ld = left.Denomalize(-ed);
+                var ld = left.Denomalize((short)-ed);
                 return ld._sig >= right._sig;
             }
             else if (ed < 0)
             {
-                var rd = right.Denomalize(ed);
+                var rd = right.Denomalize((short)ed);
                 return left._sig >= rd._sig;
             }
             else

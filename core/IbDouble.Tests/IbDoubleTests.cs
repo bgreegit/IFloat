@@ -178,5 +178,25 @@ namespace IbDecimal.Tests
                 var dd = IbDouble.Parse("AAA.456");
             });
         }
+
+		[Test]
+		public void TestOverflow()
+		{
+			IbDouble d0, d1;
+
+			d0 = new IbDouble(123456, short.MaxValue);
+			d1 = new IbDouble(654321, 10);
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				var ds = d0 * d1;
+			});
+
+			d0 = new IbDouble(123456, short.MinValue);
+			d1 = new IbDouble(654321, 10);
+			Assert.Throws(typeof(OverflowException), () =>
+			{
+				var ds = d0 / d1;
+			});
+		}
     }
 }
