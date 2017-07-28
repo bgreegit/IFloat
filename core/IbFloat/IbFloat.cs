@@ -76,7 +76,48 @@ namespace IbReal
             NormalizeSelf();
         }
 
-        private IbFloat Normalize()
+		public IbFloat(float v)
+			: this((double)v)
+		{
+		}
+
+		public IbFloat(double v)
+		{
+			if (v > 0)
+			{
+				short exp = 0;
+				while (v < 100000000 && Math.Truncate(v) != v) // 10^8
+				{
+					v *= 10;
+					exp += -1;
+				}
+
+				_sig = (long)Math.Truncate(v);
+				_exp = exp;
+			}
+			else if (v < 0)
+			{
+				v = -v;
+				short exp = 0;
+				while (v < 100000000 && Math.Truncate(v) != v) // 10^8
+				{
+					v *= 10;
+					exp += 1;
+				}
+
+				_sig = -(long)Math.Truncate(v);
+				_exp = exp;
+			}
+			else
+			{
+				_sig = 0;
+				_exp = 0;
+			}
+
+			NormalizeSelf();
+		}
+
+		private IbFloat Normalize()
         {
             var sig = _sig;
             var exp = _exp;
@@ -429,8 +470,10 @@ namespace IbReal
         public static implicit operator IbFloat(long value) { return new IbFloat(value); }
         public static implicit operator IbFloat(uint value) { return new IbFloat(value); }
         public static implicit operator IbFloat(int value) { return new IbFloat(value); }
+		public static implicit operator IbFloat(float value) { return new IbFloat(value); }
+		public static implicit operator IbFloat(double value) { return new IbFloat(value); }
 
-        public static IbFloat Zero { get { return new IbFloat(0, 0); } }
+		public static IbFloat Zero { get { return new IbFloat(0, 0); } }
         public static IbFloat One { get { return new IbFloat(1, 0); } }
         public static IbFloat MinusOne { get { return new IbFloat(-1, 0); } }
         public bool IsZero { get { return _sig == 0 && _exp == 0; } }

@@ -328,5 +328,25 @@ namespace IbReal.Tests
 			vd = (double)new IbDouble(123456, -3);
 			Assert.True(Math.Abs(vd - 123.456) / 123.456 < 0.000001);
 		}
+
+		[Test]
+		public void TestConstructor_FloatDouble()
+		{
+			IbDouble vf;
+			vf = new IbDouble(123.456f);
+			Assert.True(vf == new IbDouble(123456, -3));
+			vf = new IbDouble(12345600f);
+			Assert.True(vf == new IbDouble(123456, 2));
+			vf = new IbDouble(0.00123456f);
+			Assert.True(vf == new IbDouble(123456, -8));
+			vf = new IbDouble(1230000.0000456f);
+			Assert.True(vf == new IbDouble(123, 4));
+
+			//double vd;
+			//vd = (double)new IbDouble(123456, 3);
+			//Assert.True(Math.Abs(vd - 123456000) / 123456000 < 0.000001);
+			//vd = (double)new IbDouble(123456, -3);
+			//Assert.True(Math.Abs(vd - 123.456) / 123.456 < 0.000001);
+		}
 	}
 }

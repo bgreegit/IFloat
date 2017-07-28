@@ -106,7 +106,48 @@ namespace IbReal
             NormalizeSelf();
         }
 
-        private IbDouble Normalize()
+		public IbDouble(float v)
+			: this((double)v)
+		{
+		}
+
+		public IbDouble(double v)
+		{
+			if (v > 0)
+			{
+				short exp = 0;
+				while (v < 100000000000000000 && Math.Truncate(v) != v) // 100000000000000000 = 10^17
+				{
+					v *= 10;
+					exp += 1;
+				}
+
+				_sig = (long)Math.Truncate(v);
+				_exp = exp;
+			}
+			else if (v < 0)
+			{
+				v = -v;
+				short exp = 0;
+				while (v < 100000000000000000 && Math.Truncate(v) != v) // 100000000000000000 = until 10^17
+				{
+					v *= 10;
+					exp += 1;
+				}
+
+				_sig = -(long)Math.Truncate(v);
+				_exp = exp;
+			}
+			else
+			{
+				_sig = 0;
+				_exp = 0;
+			}
+
+			NormalizeSelf();
+		}
+
+		private IbDouble Normalize()
         {
             var sig = _sig;
             var exp = _exp;
@@ -472,8 +513,10 @@ namespace IbReal
         public static implicit operator IbDouble(long value) { return new IbDouble(value); }
         public static implicit operator IbDouble(uint value) { return new IbDouble(value); }
         public static implicit operator IbDouble(int value) { return new IbDouble(value); }
+		public static implicit operator IbDouble(float value) { return new IbDouble(value); }
+		public static implicit operator IbDouble(double value) { return new IbDouble(value); }
 
-        public static IbDouble Zero { get { return new IbDouble(0, 0); } }
+		public static IbDouble Zero { get { return new IbDouble(0, 0); } }
         public static IbDouble One { get { return new IbDouble(1, 0); } }
         public static IbDouble MinusOne { get { return new IbDouble(-1, 0); } }
         public bool IsZero { get { return _sig == 0 && _exp == 0; } }
